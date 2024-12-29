@@ -3,23 +3,23 @@ import PriceInfoCard from "@/components/PriceInfoCard";
 import ProductCard from "@/components/ProductCard";
 import { getProductById, getSimilarProducts } from "@/lib/actions";
 import { formatNumber } from "@/lib/utils";
-import { Product } from "@/types/index";
+import { Product } from "@/types";
 import Image from "next/image";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { NextPage } from "next";
 
-const ProductDetails: NextPage<{ params: { id: string } }> = async ({
-  params,
-}) => {
-  // Fetching the product and similar products
-  const product: Product = await getProductById(params.id);
+type Params = {
+  id: string;
+};
 
-  // Redirect if the product is not found
+const ProductDetails = async ({ params }: { params: Params }) => {
+  const { id } = params; // Directly accessing params
+
+  const product: Product = await getProductById(id);
+
   if (!product) redirect("/");
 
-  // Fetching similar products
-  const similarProducts = await getSimilarProducts(params.id);
+  const similarProducts = await getSimilarProducts(id);
 
   return (
     <div className="product-container">
@@ -123,7 +123,7 @@ const ProductDetails: NextPage<{ params: { id: string } }> = async ({
 
               <p className="text-sm text-black opacity-50">
                 <span className="text-primary-green font-semibold">93% </span>{" "}
-                of buyers have recommended this.
+                of buyers have recommeded this.
               </p>
             </div>
           </div>
@@ -161,7 +161,7 @@ const ProductDetails: NextPage<{ params: { id: string } }> = async ({
             </div>
           </div>
 
-          <Modal productId={params.id} />
+          <Modal productId={id} />
         </div>
       </div>
 
