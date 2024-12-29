@@ -12,29 +12,41 @@ type GenerateMetadata = {
   params: { id: string };
 };
 
-// Correcting the generateMetadata function signature
+// Static or dynamic metadata generation based on the product ID
 export async function generateMetadata({ params }: GenerateMetadata) {
-  const product = await getProductById(params.id); // Fetch product for metadata (optional)
+  const product = await getProductById(params.id);
   return {
-    title: product ? `Product ${product.title}` : "Product not found", // Fallback title if product doesn't exist
+    title: product ? `Product ${product.title}` : "Product not found",
   };
 }
 
-// Type for ProductDetails
-type ProductDetailsProps = {
+// Static function for fetching product data before rendering
+export async function getServerSideProps({
+  params,
+}: {
   params: { id: string };
-};
+}) {
+  const product = await getProductById(params.id);
+  if (!product) {
+    return { redirect: { destination: "/", permanent: false } };
+  }
 
-export default async function ProductDetails({ params }: ProductDetailsProps) {
-  // Fetching the product data using the dynamic `id`
-  const product: Product = await getProductById(params.id);
-
-  // Redirect if the product is not found
-  if (!product) redirect("/");
-
-  // Fetch similar products
   const similarProducts = await getSimilarProducts(params.id);
 
+  return {
+    props: {
+      product,
+      similarProducts,
+    },
+  };
+}
+
+type ProductDetailsProps = {
+  product: Product;
+  similarProducts: Product[];
+};
+
+const ProductDetails = ({ product, similarProducts }: ProductDetailsProps) => {
   return (
     <div className="product-container">
       <div className="flex gap-28 xl:flex-row flex-col">
@@ -72,7 +84,6 @@ export default async function ProductDetails({ params }: ProductDetailsProps) {
                   width={20}
                   height={20}
                 />
-
                 <p className="text-base font-semibold text-[#D46F77]">
                   {product.reviewsCount}
                 </p>
@@ -175,7 +186,7 @@ export default async function ProductDetails({ params }: ProductDetailsProps) {
             </div>
           </div>
 
-          <Modal productId={params.id} />
+          <Modal productId={product.id} />
         </div>
       </div>
 
@@ -217,4 +228,6 @@ export default async function ProductDetails({ params }: ProductDetailsProps) {
       )}
     </div>
   );
-}
+};
+
+export default ProductDetails;
