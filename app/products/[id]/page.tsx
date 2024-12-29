@@ -12,41 +12,29 @@ type GenerateMetadata = {
   params: { id: string };
 };
 
-// Static or dynamic metadata generation based on the product ID
+// Correcting the generateMetadata function signature
 export async function generateMetadata({ params }: GenerateMetadata) {
-  const product = await getProductById(params.id);
+  const product = await getProductById(params.id); // Fetch product for metadata (optional)
   return {
-    title: product ? `Product ${product.title}` : "Product not found",
+    title: product ? `Product ${product.title}` : "Product not found", // Fallback title if product doesn't exist
   };
 }
 
-// Static function for fetching product data before rendering
-export async function getServerSideProps({
-  params,
-}: {
-  params: { id: string };
-}) {
-  const product = await getProductById(params.id);
-  if (!product) {
-    return { redirect: { destination: "/", permanent: false } };
-  }
-
-  const similarProducts = await getSimilarProducts(params.id);
-
-  return {
-    props: {
-      product,
-      similarProducts,
-    },
-  };
-}
-
+// Type for ProductDetails
 type ProductDetailsProps = {
-  product: Product;
-  similarProducts: Product[];
+  params: { id: string };
 };
 
-const ProductDetails = ({ product, similarProducts }: ProductDetailsProps) => {
+export default async function ProductDetails({ params }: ProductDetailsProps) {
+  // Fetching the product data using the dynamic `id`
+  const product: Product = await getProductById(params.id);
+
+  // Redirect if the product is not found
+  if (!product) redirect("/");
+
+  // Fetch similar products
+  const similarProducts = await getSimilarProducts(params.id);
+
   return (
     <div className="product-container">
       <div className="flex gap-28 xl:flex-row flex-col">
@@ -84,6 +72,7 @@ const ProductDetails = ({ product, similarProducts }: ProductDetailsProps) => {
                   width={20}
                   height={20}
                 />
+
                 <p className="text-base font-semibold text-[#D46F77]">
                   {product.reviewsCount}
                 </p>
@@ -186,7 +175,7 @@ const ProductDetails = ({ product, similarProducts }: ProductDetailsProps) => {
             </div>
           </div>
 
-          <Modal productId={product.id} />
+          <Modal productId={params.id} />
         </div>
       </div>
 
@@ -228,6 +217,4 @@ const ProductDetails = ({ product, similarProducts }: ProductDetailsProps) => {
       )}
     </div>
   );
-};
-
-export default ProductDetails;
+}
