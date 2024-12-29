@@ -1,15 +1,20 @@
 import HeroCarousel from "@/components/HeroCarousel";
-import SearchBar from "@/components/SearchBar";
+// import Searchbar from "@/components/Searchbar";
 import Image from "next/image";
+import { getAllProducts } from "@/lib/actions";
+import ProductCard from "@/components/ProductCard";
+import Searchbar from "@/components/Searchbar";
 
-const Home = () => {
+const Home = async () => {
+  const allProducts = await getAllProducts();
+
   return (
     <>
-      <section className="px-6 py-24 ">
+      <section className="px-6 md:px-20 py-24">
         <div className="flex max-xl:flex-col gap-16">
           <div className="flex flex-col justify-center">
             <p className="small-text">
-              Smart Shopping starts here :
+              Smart Shopping Starts Here:
               <Image
                 src="/assets/icons/arrow-right.svg"
                 alt="arrow-right"
@@ -17,33 +22,31 @@ const Home = () => {
                 height={16}
               />
             </p>
+
             <h1 className="head-text">
-              <span className="text-primary"> EasyPeasy</span> - Shop like a BTS
-              member on a budget (kind of)!
+              Unleash the Power of
+              <span className="text-primary"> PriceWise</span>
             </h1>
+
             <p className="mt-6">
-              Hey Jeengar! Ready to conquer your shopping sprees with the power
-              of EasyPeasy? Even RM approves of wise shopping decisions!
+              Powerful, self-serve product and growth analytics to help you
+              convert, engage, and retain more.
             </p>
-            <SearchBar />
+
+            <Searchbar />
           </div>
+
           <HeroCarousel />
         </div>
       </section>
 
       <section className="trending-section">
-        <h2 className="section-text">
-          Your shopping cart says ‘Take my money,’ but EasyPeasy says, ‘Wait,
-          let’s find it cheaper first!’
-        </h2>
+        <h2 className="section-text">Trending</h2>
+
         <div className="flex flex-wrap gap-x-8 gap-y-16">
-          {["Array", "Book", "Sneakers"].map((product, i) => {
-            return (
-              <div key={i} className="product-card">
-                {product}
-              </div>
-            );
-          })}
+          {allProducts?.map((product) => (
+            <ProductCard key={product._id} product={product} />
+          ))}
         </div>
       </section>
     </>
