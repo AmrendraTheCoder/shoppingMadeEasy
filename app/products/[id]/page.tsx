@@ -3,7 +3,7 @@ import PriceInfoCard from "@/components/PriceInfoCard";
 import ProductCard from "@/components/ProductCard";
 import { getProductById, getSimilarProducts } from "@/lib/actions";
 import { formatNumber } from "@/lib/utils";
-import { Product } from "@/types/index";
+import { Product } from "@/types";
 import Image from "next/image";
 import Link from "next/link";
 import { redirect } from "next/navigation";
@@ -12,24 +12,27 @@ type GenerateMetadata = {
   params: { id: string };
 };
 
+// Correcting the generateMetadata function signature
 export async function generateMetadata({ params }: GenerateMetadata) {
+  const product = await getProductById(params.id); // Fetch product for metadata (optional)
   return {
-    title: `Product ${params.id}`,
+    title: product ? `Product ${product.title}` : "Product not found", // Fallback title if product doesn't exist
   };
 }
 
-export default async function ProductDetails({
-  params,
-}: {
+// Type for ProductDetails
+type ProductDetailsProps = {
   params: { id: string };
-}) {
-  // Fetching the product and similar products
+};
+
+export default async function ProductDetails({ params }: ProductDetailsProps) {
+  // Fetching the product data using the dynamic `id`
   const product: Product = await getProductById(params.id);
 
   // Redirect if the product is not found
   if (!product) redirect("/");
 
-  // Fetching similar products
+  // Fetch similar products
   const similarProducts = await getSimilarProducts(params.id);
 
   return (
