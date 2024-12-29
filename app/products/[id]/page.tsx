@@ -1,26 +1,25 @@
 import Modal from "@/components/Modal";
 import PriceInfoCard from "@/components/PriceInfoCard";
 import ProductCard from "@/components/ProductCard";
-import { getProductById, getSimilarProducts } from "@/lib/actions"
+import { getProductById, getSimilarProducts } from "@/lib/actions";
 import { formatNumber } from "@/lib/utils";
-import { Product } from "@/types/indes";
-// import { Product } from "@/types";
+import { Product } from "@/types/index";
 import Image from "next/image";
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { NextPage } from "next";
 
-type Props = {
-  params: { id: string }
-}
+const ProductDetails: NextPage<{ params: { id: string } }> = async ({
+  params,
+}) => {
+  // Fetching the product and similar products
+  const product: Product = await getProductById(params.id);
 
-const ProductDetails = async ({ params }: Props) => {
+  // Redirect if the product is not found
+  if (!product) redirect("/");
 
-  const { id } = await params;
-  const product: Product = await getProductById(id);
-
-  if(!product) redirect('/')
-
-  const similarProducts = await getSimilarProducts(id);
+  // Fetching similar products
+  const similarProducts = await getSimilarProducts(params.id);
 
   return (
     <div className="product-container">
@@ -124,7 +123,7 @@ const ProductDetails = async ({ params }: Props) => {
 
               <p className="text-sm text-black opacity-50">
                 <span className="text-primary-green font-semibold">93% </span>{" "}
-                of buyers have recommeded this.
+                of buyers have recommended this.
               </p>
             </div>
           </div>
@@ -162,32 +161,19 @@ const ProductDetails = async ({ params }: Props) => {
             </div>
           </div>
 
-          <Modal productId={id} />
+          <Modal productId={params.id} />
         </div>
       </div>
 
       <div className="flex flex-col gap-16">
-        {/* <div className="flex flex-col gap-5">
-          {${product?.description} <h3 className="text-2xl text-secondary font-semibold">
+        <div className="flex flex-col gap-5">
+          <h3 className="text-2xl text-secondary font-semibold">
             Product Description
-          </h3>}
+          </h3>
 
           <div className="flex flex-col gap-4">
             {product?.description?.split("\n")}
           </div>
-        </div> */}
-
-        <div className="flex flex-col gap-5">
-          {product?.description && ( // Check if the description exists
-            <div className="flex flex-col gap-5">
-              <h3 className="text-2xl text-secondary font-semibold">
-                Product Description
-              </h3>
-              <div className="flex flex-col gap-4">
-                {product?.description?.split("\n")}
-              </div>
-            </div>
-          )}
         </div>
 
         <button className="btn w-fit mx-auto flex items-center justify-center gap-3 min-w-[200px]">
@@ -198,7 +184,7 @@ const ProductDetails = async ({ params }: Props) => {
             height={22}
           />
 
-          <Link href={product.url} className="text-base text-white">
+          <Link href="/" className="text-base text-white">
             Buy Now
           </Link>
         </button>
@@ -217,6 +203,6 @@ const ProductDetails = async ({ params }: Props) => {
       )}
     </div>
   );
-}
+};
 
-export default ProductDetails
+export default ProductDetails;

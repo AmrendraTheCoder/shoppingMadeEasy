@@ -4,7 +4,7 @@ import {
   EmailContent,
   EmailProductInfo,
   NotificationType,
-} from "@/types/indes";
+} from "@/types/index";
 import nodemailer from "nodemailer";
 
 const Notification = {

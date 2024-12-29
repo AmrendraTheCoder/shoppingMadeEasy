@@ -7,7 +7,7 @@ import { scrapeAmazonProduct } from "../scraper";
 import { getAveragePrice, getHighestPrice, getLowestPrice } from "../utils";
 // import { User } from "@/types";
 import { generateEmailBody, sendEmail } from "../nodemailer";
-import { User } from "@/types/indes";
+import { User } from "@/types/index";
 
 export async function scrapeAndStoreProduct(productUrl: string) {
   if(!productUrl) return;
