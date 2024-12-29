@@ -7,11 +7,22 @@ import { Product } from "@/types/index";
 import Image from "next/image";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { NextPage } from "next";
 
-const ProductDetails: NextPage<{ params: { id: string } }> = async ({
+type GenerateMetadata = {
+  params: { id: string };
+};
+
+export async function generateMetadata({ params }: GenerateMetadata) {
+  return {
+    title: `Product ${params.id}`,
+  };
+}
+
+export default async function ProductDetails({
   params,
-}) => {
+}: {
+  params: { id: string };
+}) {
   // Fetching the product and similar products
   const product: Product = await getProductById(params.id);
 
@@ -203,6 +214,4 @@ const ProductDetails: NextPage<{ params: { id: string } }> = async ({
       )}
     </div>
   );
-};
-
-export default ProductDetails;
+}
