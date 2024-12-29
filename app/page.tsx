@@ -1,5 +1,5 @@
 import HeroCarousel from "@/components/HeroCarousel";
-import Searchbar from "@/components/Searchbar";
+import SearchBar from "@/components/Searchbar";
 import Image from "next/image";
 import { getAllProducts } from "@/lib/actions";
 import ProductCard from "@/components/ProductCard";
@@ -32,7 +32,7 @@ const Home = async () => {
               convert, engage, and retain more.
             </p>
 
-            <Searchbar />
+            <SearchBar />
           </div>
 
           <HeroCarousel />
