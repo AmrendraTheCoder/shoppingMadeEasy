@@ -22,6 +22,6 @@
       "@/*": ["./*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "app/products/[id]/page.jsx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "app/products/[id]/page.jsx", "app/api/cron/route.js", "app/layout.jsx", "app/page.jsx", "components/HeroCarousel.jsx", "components/Modal.jsx", "components/Navbar.jsx", "components/PriceInfoCard.jsx", "components/ProductCard.jsx", "components/SearchBar.jsx", "lib/actions/index.js", "lib/nodemailer/index.js", "lib/scraper/index.js", "lib/mongoose.js", "lib/utils.js", "types/index.js"],
   "exclude": ["node_modules"]
 }

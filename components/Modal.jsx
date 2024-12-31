@@ -1,20 +1,16 @@
 "use client";
 
-import { FormEvent, Fragment, useState } from "react";
+import { useState, Fragment } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import Image from "next/image";
 import { addUserEmailToProduct } from "@/lib/actions";
 
-interface Props {
-  productId: string;
-}
-
-const Modal = ({ productId }: Props) => {
+const Modal = ({ productId }) => {
   let [isOpen, setIsOpen] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [email, setEmail] = useState("");
 
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
 

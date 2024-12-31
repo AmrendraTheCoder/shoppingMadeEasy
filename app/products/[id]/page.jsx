@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { useRouter } from 'next/router';
 import Modal from "@/components/Modal";
 import PriceInfoCard from "@/components/PriceInfoCard";
@@ -14,10 +14,16 @@ const ProductDetails = () => {
   const { id } = router.query;  // Access the product ID from the URL query
   const [product, setProduct] = useState(null);
   const [similarProducts, setSimilarProducts] = useState([]);
+  const [isClient, setIsClient] = useState(false);
 
-  // Fetch product and similar products only when the id is available
+  // To ensure the router is available (only on the client)
   useEffect(() => {
-    if (id) {
+    setIsClient(true);
+  }, []);
+
+  // Fetch product and similar products only when the id is available and it's client-side
+  useEffect(() => {
+    if (isClient && id) {
       const fetchProductDetails = async () => {
         const fetchedProduct = await getProductById(id);
         if (fetchedProduct) {
@@ -31,7 +37,7 @@ const ProductDetails = () => {
 
       fetchProductDetails();
     }
-  }, [id, router]);  // Re-run when id or router changes
+  }, [id, isClient, router]);  // Re-run when id or router changes
 
   if (!product) {
     return <div>Loading...</div>;  // Show loading state while fetching product data

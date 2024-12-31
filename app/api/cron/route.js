@@ -6,7 +6,7 @@ import {
   getAveragePrice,
   getEmailNotifType,
 } from "@/lib/utils";
-import { connectToDB } from "@/lib/mongoose";
+import { connectDb } from "@/lib/mongoose";
 import Product from "@/lib/models/product.model";
 import { scrapeAmazonProduct } from "@/lib/scraper";
 import { generateEmailBody, sendEmail } from "@/lib/nodemailer";
@@ -15,9 +15,9 @@ export const maxDuration = 60; // Limit duration to 60 seconds
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
-export async function GET(request: Request) {
+export async function GET(request) {
   try {
-    connectToDB();
+    connectDb();
 
     // Fetch products in small batches
     const batchSize = 10; // Adjust based on average execution time
@@ -69,9 +69,7 @@ export async function GET(request: Request) {
               productInfo,
               emailNotifType
             );
-            const userEmails = updatedProduct.users.map(
-              (user: any) => user.email
-            );
+            const userEmails = updatedProduct.users.map((user) => user.email);
             await sendEmail(emailContent, userEmails);
           }
 
@@ -89,7 +87,7 @@ export async function GET(request: Request) {
       message: "Processed batch successfully",
       data: updatedProducts,
     });
-  } catch (error: any) {
+  } catch (error) {
     return NextResponse.json(
       { error: `Failed to process batch: ${error.message}` },
       { status: 500 }
